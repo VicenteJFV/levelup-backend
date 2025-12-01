@@ -45,6 +45,7 @@ public class ProductController {
                     existing.setPrice(p.getPrice());
                     existing.setImageUrl(p.getImageUrl());
                     existing.setDescription(p.getDescription());
+                    existing.setStock(p.getStock());
                     return ResponseEntity.ok(repo.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());

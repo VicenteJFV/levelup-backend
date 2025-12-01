@@ -19,6 +19,7 @@ public class Product {
     private String category;
 
     private Integer price;
+    private Integer stock;
 
     @Column(length = 1000)
     private String description;
