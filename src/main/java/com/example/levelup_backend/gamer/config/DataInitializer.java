@@ -1,10 +1,15 @@
 package com.example.levelup_backend.gamer.config;
 
-import com. example.levelup_backend.gamer. model.Product;
+import com. example.levelup_backend.gamer.model.Product;
+import com.example.levelup_backend.gamer.model.User;
 import com.example.levelup_backend.gamer.repository.ProductRepository;
+import com.example.levelup_backend.gamer.repository.UserRepository;
+import com.example.levelup_backend.gamer.security.RoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot. CommandLineRunner;
-import org.springframework. stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,9 +18,21 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void run(String...  args) {
+	//Crear usuario admin si no existe
+	if (userRepository.findByEmail("admin@levelup.com").isEmpty()){
+	   BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	   User admin = new User();
+	   admin.setName("Administrador");
+	   admin.setEmail("admin@levelup.com");
+	   admin.setPassword(encoder.encode("admin123"));
+	   admin.setRole(RoleEnum.ROLE_ADMIN);
+	   userRepository.save(admin);
+	   System.out.println("Usuario Admin Creado: admin@levelup.com / admin123");
+	}
         // Solo inicializar si no hay productos en la base de datos
         if (productRepository.count() >= 5) {
             return;
