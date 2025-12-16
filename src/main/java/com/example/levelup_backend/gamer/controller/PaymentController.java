@@ -20,18 +20,12 @@ public class PaymentController {
     @PostMapping("/create-preference")
     public ResponseEntity<?> createPreference(@RequestBody Map<String, Object> payload) {
         try {
-            String title = (String) payload.get("title");
+            String title = payload.get("title").toString();
             BigDecimal price = new BigDecimal(payload.get("price").toString());
             Integer quantity = Integer.parseInt(payload.get("quantity").toString());
             String orderId = payload.get("orderId").toString();
 
-            // Ahora el service devuelve INIT POINT (URL de pago)
-            String initPoint = mercadoPagoService.createPreference(
-                    title,
-                    price,
-                    quantity,
-                    orderId
-            );
+            String initPoint = mercadoPagoService.createPreference(title, price, quantity, orderId);
 
             Map<String, String> response = new HashMap<>();
             response.put("initPoint", initPoint);
