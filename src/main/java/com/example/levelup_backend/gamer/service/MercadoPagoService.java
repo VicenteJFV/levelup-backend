@@ -1,7 +1,6 @@
 package com.example.levelup_backend.gamer.service;
 
 import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
@@ -36,28 +35,22 @@ public class MercadoPagoService {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            // URLs de retorno
-            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://tu-frontend-url/success")
-                    .failure("http://tu-frontend-url/failure")
-                    .pending("http://tu-frontend-url/pending")
-                    .build();
-
-            // Crear preferencia
+            // Crear preferencia (SIN backUrls por ahora)
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
-                    .backUrls(backUrls)
-                    .autoReturn("approved")
                     .externalReference(orderId)
                     .build();
 
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
 
-            return preference.getId();
+            // Retornamos la URL real de pago
+            return preference.getInitPoint();
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al crear preferencia de MercadoPago:  " + e.getMessage());
+            throw new RuntimeException(
+                "Error al crear preferencia de MercadoPago: " + e.getMessage()
+            );
         }
     }
 }
