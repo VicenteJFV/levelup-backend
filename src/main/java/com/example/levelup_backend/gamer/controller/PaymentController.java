@@ -22,18 +22,26 @@ public class PaymentController {
         try {
             String title = (String) payload.get("title");
             BigDecimal price = new BigDecimal(payload.get("price").toString());
-            Integer quantity = (Integer) payload.get("quantity");
-            String orderId = (String) payload.get("orderId");
+            Integer quantity = Integer.parseInt(payload.get("quantity").toString());
+            String orderId = payload.get("orderId").toString();
 
-            String preferenceId = mercadoPagoService.createPreference(title, price, quantity, orderId);
+            // Ahora el service devuelve INIT POINT (URL de pago)
+            String initPoint = mercadoPagoService.createPreference(
+                    title,
+                    price,
+                    quantity,
+                    orderId
+            );
 
             Map<String, String> response = new HashMap<>();
-            response.put("preferenceId", preferenceId);
+            response.put("initPoint", initPoint);
 
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error:  " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body("Error al crear preferencia de pago: " + e.getMessage());
         }
     }
 }
