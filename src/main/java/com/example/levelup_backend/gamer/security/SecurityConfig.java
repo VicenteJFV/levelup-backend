@@ -36,7 +36,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/products/**", "/api/productos/**").permitAll()
-                        .requestMatchers("/swagger-ui. html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/api/payment/**").permitAll()
+                        .requestMatchers("/swagger-ui. html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -69,16 +71,16 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-            .requestMatchers(
-                "/swagger-ui.html",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/api-docs/**",
-                "/swagger-resources/**",
-                "/webjars/**"
-            );
+                .requestMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**");
     }
 }
