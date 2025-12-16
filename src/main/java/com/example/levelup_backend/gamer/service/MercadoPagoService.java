@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class MercadoPagoService {
 
-    @Value("${mercadopago. access.token}")
+    @Value("${mercadopago.access.token}")
     private String accessToken;
 
     public String createPreference(String title, BigDecimal price, Integer quantity, String orderId) {
